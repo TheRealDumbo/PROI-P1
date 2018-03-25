@@ -1,18 +1,16 @@
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <cstdio>
 #include "hist.h"
 #include "menu.h"
+
 using namespace std;
-
-
-
 
 int main()
 {
-    hist st;
-    hist temp;
-    menu(st, temp);
-    return 0;
+    hist txt1;
+    hist txt2;
+    menu(txt1, txt2);
 }
 // Piotr Dabrowski, funkcja main

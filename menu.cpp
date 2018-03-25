@@ -1,112 +1,114 @@
-#include "menu.h"
-#include "hist.h"
-#include <cstdio>
 #include <iostream>
+#include <ostream>
 #include <string>
+#include <cstdio>
+#include "hist.h"
+#include "menu.h"
+// wszystkie metody i przeladowane operatory uzywane w funkcji menu sa opisane w plikach hist.h oraz hist.cpp
 using namespace std;
-int menu(hist st, hist temp)
+
+int menu(hist a, hist b)
 {
-    cout<<"Witam. Prosze wpisac dowolny tekst z klawiatury."<<endl;
-    getline(cin, st.tekst);
-    char ic;
-    st.iloscall=0;
-    for(int i=0; i<10; i++)
-    {
-        ic=i+48; //zamiana cyfry w znak
-        st.ilosc[i]=st.ilosccyfry(st.tekst, ic);
-        st.iloscall+=st.ilosc[i];
-    }
-    char cd;
-    merg:
-    cout<<endl<<"Aby wpisac nowy tekst, wczytaj 'n'"<<endl<<"Aby sprawdzic statystki konkretnej cyfry, wczytaj wspomniana cyfre"<<endl<<"Aby sprawdzic statystyki wszystkich cyfr w tekscie, wczytaj 'a'"<<endl<<"Aby wyswietlic obecna tresc tekstu, wczytaj 'd'"<<endl<<"Aby zakonczyc prace z programem, wczytaj 'e'"<<endl;
+    char cd; // zmienna uzywana do nawigacji po menu
+og: // punkt: opcje ogolne
+    cout<<"Aby porownac histogramy, wczytaj 'p'"<<endl<<"Aby polaczyc histogramy, wczytaj 'm'"<<endl<<"Aby przejsc do opcji zwiazanych z poszczegolnymi tekstami, wczytaj odpowiednio '1', lub '2'"<<endl<<"Aby zakonczyc prace programu, wczytaj 'e'"<<endl;
     while(1)
     {
         cin>>cd;
         getchar();
-        if((cd>47)&&(cd<58))
+        if(cd=='p')
         {
-            int ci=cd-48;
-            cout<<"Cyfra "<<ci<<" wystapila w tekscie "<<st.ilosc[ci]<<" raz(y), z czestotliwoscia srednio 1 na "<<st.frequency(st.tekst, st.ilosc[ci])<<" znak(i/ow)."<<endl;
-        }
-        if(cd=='a')
-        {
-            cout<<"Wszystkie cyfry wystapily w tekscie, lacznie "<<st.iloscall<<" raz(y), z czestotliwoscia srednio 1 na "<<st.frequency(st.tekst, st.iloscall)<<" znak(i/ow)."<<endl;
-        }
-        if(cd=='n')
-        {
-            cout<<"Wpisz tekst."<<endl;
-            getline(cin, temp.tekst);
-            break;
-        }
-        if(cd=='d')
-        {
-            cout<<endl<<st.tekst<<endl<<endl;
-        }
-        if(cd=='e')
-        {
-            return 0;
-        }
-    }
-    temp.iloscall=0;
-    for(int i=0; i<10; i++)
-    {
-        ic=i+48; //zamiana cyfry w znak
-        temp.ilosc[i]=temp.ilosccyfry(temp.tekst, ic);
-        temp.iloscall+=temp.ilosc[i];
-    }
-    int git=0; //pomocnicza do porownania histogramow
-    cout<<endl<<"Aby sprawdzic podobienstwo histogramow, wczytaj 'c'"<<endl<<"Aby polaczyc tekst w jeden, wczytaj 'm'"<<endl<<"Mozesz takze swobodnie sprawdzic histogram nowego tekstu, za pomoca wczesniej podanych komend, wyswietlic nowy tekst lub zakonczyc prace programu."<<endl;
-    while(1)
-    {
-    cin>>cd;
-    getchar();
-        if((cd>47)&&(cd<58))
-        {
-            int ci=cd-48;
-            cout<<"Cyfra "<<ci<<" wystapila w tekscie "<<temp.ilosc[ci]<<" raz(y), z czestotliwoscia srednio 1 na "<<temp.frequency(temp.tekst, temp.ilosc[ci])<<" znak(i/ow)."<<endl;
-        }
-        if(cd=='a')
-        {
-            cout<<"Wszystkie cyfry wystapily w tekscie, lacznie "<<temp.iloscall<<" raz(y), z czestotliwoscia srednio 1 na "<<temp.frequency(temp.tekst, temp.iloscall)<<" znak(i/ow)."<<endl;
-        }
-        if(cd=='c')
-        {
-            for(int i=0; i<10; i++)
+            if(a==b)
             {
-                if(st.ilosc[i]==temp.ilosc[i])
-                {
-                    git++;
-                }
-                else
-                {
-                    cout<<"Histogramy sie roznia."<<endl;
-                    break;
-                }
+                cout<<"Histogramy sa jednakowe."<<endl;
             }
-            if(git==10)
+            else
             {
-                cout<<"Histogramy sa identyczne"<<endl;
+                cout<<"Histogramy sie roznia."<<endl;
             }
         }
         if(cd=='m')
         {
-            st.tekst+=temp.tekst;
-            for(int i=0; i<10; i++)
-            {
-                st.ilosc[i]+=temp.ilosc[i];
-            }
-            st.iloscall+=temp.iloscall;
-            cout<<"Polaczenie tesktow zakonczone pomyslnie."<<endl;
-            goto merg;
+            a=a+b;
+            goto polaczone;
         }
-        if(cd=='d')
+        if(cd=='1')
         {
-            cout<<endl<<temp.tekst<<endl<<endl;
+            goto t1;
+        }
+        if(cd=='2')
+        {
+            goto t2;
         }
         if(cd=='e')
         {
             return 0;
         }
     }
+t1: // punkt tekst 1.
+    cout<<"Jestes w tekscie nr 1."<<endl<<"Aby sprawdzic histogram, wczytaj 'h'"<<endl<<"Aby kontynuowac wpisywanie tekstu, wczytaj 'k'"<<endl<<"Aby przejsc do tekstu 2., wczytaj '2'"<<endl<<"Aby przejsc do opcji ogolnych, wczytaj 'o'"<<endl;
+    while(1)
+    {
+        cin>>cd;
+        getchar();
+        if(cd=='h')
+        {
+            cout<<a;
+        }
+        if(cd=='k')
+        {
+            a.dopisanie();
+        }
+        if(cd=='2')
+        {
+            goto t2;
+        }
+        if(cd=='o')
+        {
+            goto og;
+        }
+    }
+t2: // punkt: tekst 2.
+    cout<<"Jestes w tekscie nr 2."<<endl<<"Aby sprawdzic histogram, wczytaj 'h'"<<endl<<"Aby kontynuowac wpisywanie tekstu, wczytaj 'k'"<<endl<<"Aby przejsc do tekstu 1., wczytaj '1'"<<endl<<"Aby przejsc do opcji ogolnych, wczytaj 'o'"<<endl;
+    while(1)
+    {
+        cin>>cd;
+        getchar();
+        if(cd=='h')
+        {
+            cout<<b;
+        }
+        if(cd=='k')
+        {
+            b.dopisanie();
+        }
+        if(cd=='1')
+        {
+            goto t1;
+        }
+        if(cd=='o')
+        {
+            goto og;
+        }
+    }
+polaczone: //punkt: teksty po zlaczeniu
+    cout<<"Jestes w polaczonym tekscie."<<endl<<"Aby sprawdzic histogram, wczytaj 'h'"<<endl<<"Aby kontynuowac wpisywanie tekstu, wczytaj 'k'"<<endl<<"Aby zakonczyc prace programu, wczytaj 'e'"<<endl;
+    while(1)
+    {
+        cin>>cd;
+        getchar();
+        if(cd=='h')
+        {
+            cout<<a;
+        }
+        if(cd=='k')
+        {
+            a.dopisanie();
+        }
+        if(cd=='e')
+        {
+            return 0;
+        }
+    }
+    return 0;
 }
-// Piotr Dabrowski, source funkcji interaktywnego menu
